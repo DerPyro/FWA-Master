@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+	<!--
+	fieldName (String, mandatory): used to set the th:field attribute, check for field-errors and is (suffix-)part of the translation key
+	componentIsReadonly (Boolean, default: false): if true the component will be set to readonly
+	componentPlaceholder (String): the text which will be displayed as placeholder (must already be translated)
+	componentInputType (String, default: 'text'): sets the type attribute of the input
+	path (String, mandatory): bindingField -->
+		<div th:fragment="textinput" class="form-group">
+			<label th:for="${fieldName}" class="control-label" th:text="${fieldText}"></label>
+			<input th:field=*{__${path}__} class="form-control" th:type="${componentInputType ?: 'text'}" th:readonly="${componentIsReadonly ?: false}" th:placeholder="${componentPlaceholder}" />
+		</div>
+</body>
+</html>

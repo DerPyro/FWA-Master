@@ -1,0 +1,298 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.springframework.org/security/tags">
+
+  <body>
+    <!-- Input block with vertically ordered label and text-input (text, password etc.)
+      Parameters:
+        fieldName (String, mandatory): used to set the th:field attribute, check for field-errors and is (suffix-)part of the translation key
+        fieldMessagesPrefix (String): prefix of any translation key (e.g. for the label)
+        fieldIsMandatory (Boolean, default: false): if true the label will have an '*' in it
+        fieldDescription (String): if present a bootstrap popover with the given description will be available next to the input
+        componentIsReadonly (Boolean, default: false): if true the component will be set to readonly
+        componentPlaceholder (String): the text which will be displayed as placeholder (must already be translated)
+        componentInputType (String, default: 'text'): sets the type attribute of the input
+    -->
+    <div th:fragment="text-input-vertical" class="form-group" th:classappend="${fieldHasErrors} ? has-error" th:with="fieldHasErrors=${#fields.hasErrors(fieldName)}">
+      <label th:for="${fieldName}" class="control-label fs-left-control-label" th:switch="${fieldIsMandatory ?: false}" >
+        <span th:case="true" th:text="#{label.generic.input.mandatory(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL:*</span>
+        <span th:case="false" th:text="#{label.generic.input(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL:</span>
+        <span th:if="${fieldHasErrors}" th:errors="*{__${fieldName}__}">ERRORS</span>
+      </label>
+      <input th:if="${fieldDescription == null}" th:field="*{__${fieldName}__}" class="form-control" th:type="${componentInputType ?: 'text'}" th:readonly="${componentIsReadonly ?: false}" th:placeholder="${componentPlaceholder}" />
+      <div th:if="${fieldDescription != null}" class="input-group">
+        <input th:field="*{__${fieldName}__}" class="form-control" th:type="${componentInputType ?: 'text'}" th:readonly="${componentIsReadonly ?: false}" th:placeholder="${componentPlaceholder}" />
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="button" data-toggle="popover" data-placement="top" data-trigger="focus" th:attr="data-content=${fieldDescription}" tabindex="-1">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input block with vertically ordered label and number-input
+      Parameters:
+        fieldName (String, mandatory): used to set the th:field attribute, check for field-errors and is (suffix-)part of the translation key
+        fieldMessagesPrefix (String): prefix of any translation key (e.g. for the label)
+        fieldIsMandatory (Boolean, default: false): if true the label will have an '*' in it
+        fieldDescription (String): if present a bootstrap popover with the given description will be available next to the input
+        componentIsReadonly (Boolean, default: false): if true the component will be set to readonly
+        componentPlaceholder (String): the text which will be displayed as placeholder (must already be translated)
+        min: minimum value for spinner button
+        max: maximum value for spinner button
+    -->
+    <div th:fragment="number-input-vertical" class="form-group" th:classappend="${fieldHasErrors} ? has-error" th:with="fieldHasErrors=${#fields.hasErrors(fieldName)}">
+      <label th:for="${fieldName}" class="control-label fs-left-control-label" th:switch="${fieldIsMandatory ?: false}" >
+        <span th:case="true" th:text="#{label.generic.input.mandatory(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL:*</span>
+        <span th:case="false" th:text="#{label.generic.input(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL:</span>
+        <span th:if="${fieldHasErrors}" th:errors="*{__${fieldName}__}">ERRORS</span>
+      </label>
+      <input th:if="${fieldDescription == null}" th:field="*{__${fieldName}__}" class="form-control" type="number" th:min="${min}" th:max="${max}" th:readonly="${componentIsReadonly ?: false}" th:placeholder="${componentPlaceholder}" />
+      <div th:if="${fieldDescription != null}" class="input-group">
+        <input th:field="*{__${fieldName}__}" class="form-control" th:type="${componentInputType ?: 'text'}" th:readonly="${componentIsReadonly ?: false}" th:placeholder="${componentPlaceholder}" />
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="button" data-toggle="popover" data-placement="top" data-trigger="focus" th:attr="data-content=${fieldDescription}" tabindex="-1">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div th:fragment="filter-text-input" class="input-group">
+      <input th:field="*{__${fieldName}__}" type="text" class="form-control input-sm" th:placeholder="${componentPlaceholder}" />
+      <span class="input-group-btn">
+        <button class="btn btn-default btn-sm fs-reset-btn-identifier" type="button" th:title="#{filter.clear}">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </span>
+    </div>
+
+    <!-- Input block with vertically ordered label and textarea
+      Parameters:
+        fieldName (String, mandatory): used to set the th:field attribute, check for field-errors and is (suffix-)part of the translation key
+        fieldMessagesPrefix (String): prefix of any translation key (e.g. for the label)
+        fieldIsMandatory (Boolean, default: false): if true the label will have an '*' in it
+        fieldDescription (String): if present a bootstrap popover with the given (html-rich) description will be available next to the input
+        fieldDefaultValue (String): if present this string will overwrite the text/value of the field
+        componentIsReadonly (Boolean, default: false): if true the component will be set to readonly
+        componentPlaceholder (String): the text which will be displayed as placeholder (must already be translated)
+        componentRows (Integer): sets the rows attribute of the textarea
+    -->
+    <div th:fragment="textarea-vertical" class="form-group" th:classappend="${fieldHasErrors} ? has-error" th:with="fieldHasErrors=${#fields.hasErrors(fieldName)}" th:switch="${fieldDefaultValue != null}">
+      <label th:for="${fieldName}" class="control-label" th:switch="${fieldIsMandatory ?: false}" >
+        <span th:case="true" th:text="#{label.generic.input.mandatory(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL*:</span>
+        <span th:case="false" th:text="#{label.generic.input(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL:</span>
+        <span th:if="${fieldHasErrors}" th:errors="*{__${fieldName}__}">ERRORS</span>
+      </label>
+      <div th:classappend="${fieldDescription != null} ? input-group">
+        <textarea th:case="true" th:field="*{__${fieldName}__}" th:text="${fieldDefaultValue}" th:rows="${componentRows}" class="form-control fs-vertical-resize" th:readonly="${componentIsReadonly ?: false}" th:placeholder="${componentPlaceholder}"></textarea>
+        <textarea th:case="false" th:field="*{__${fieldName}__}" th:rows="${componentRows}" class="form-control fs-vertical-resize" th:readonly="${componentIsReadonly ?: false}" th:placeholder="${componentPlaceholder}"></textarea>
+        <div th:if="${fieldDescription != null}" class="input-group-btn fs-top-align">
+          <button class="btn btn-default" type="button" data-html="true" data-toggle="popover" data-placement="top" data-trigger="focus" th:attr="data-content=${fieldDescription}" tabindex="-1">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input block for checkboxes
+      Parameters:
+        fieldName (String, mandatory): used to set the th:field attribute, check for field-errors and is (suffix-)part of the translation key
+        fieldMessagesPrefix (String): prefix of any translation key (e.g. for the label)
+        componentToggleCheckbox (Boolean): if true the checkbox will be rendered as a bootstrap-toggle component
+    -->
+    <div th:fragment="checkbox" class="form-group" th:classappend="${fieldHasErrors} ? has-error" th:with="fieldHasErrors=${#fields.hasErrors(fieldName)}">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" th:attr="data-toggle=${componentToggleCheckbox ?: false} ? 'toggle'" th:field="*{__${fieldName}__}" />
+          <span th:text="#{${fieldMessagesPrefix ?: ''}+${fieldName}}" />
+        </label>
+      </div>
+    </div>
+
+    <!-- Input block for files
+      Parameters:
+        fieldName (String, mandatory): used to set th:field attribute and corresponding values.
+        fileTypes (String, mandatory): sets the accepted filetypes (e.G. "image/jpeg, image/png" or "image/jpeg")
+        context (String): sets the context in which to use the files. This requires the complete preevaluated context to use (e.G. "/organizations/[22222222-2222]/userGroups/[new]/"). Default is empty string.
+        fieldMessagesPrefix (String): prefix of any translation key (e.g. for the label, helptext etc)
+    -->
+    <div th:fragment="file" class="form-group" th:classappend="${fieldHasErrors} ? has-error" th:with="fieldHasErrors=${#fields.hasErrors(fieldName)}, context=${context ?: ''}">
+      <!--/*/ <th:block th:with="logoSet = *{__${fieldName}__Set} ?: false"> /*/-->
+      <label th:for="${fieldName}" class="control-label">
+        <span th:text="#{label.generic.input(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL</span>
+        <span th:if="${fieldHasErrors}" th:errors="*{__${fieldName}__}">ERRORS</span>
+      </label>
+      <div class="input-wrapper" th:classappend="${fieldHasErrors} ? error">
+        <div class="btn-group" role="group">
+          <a th:id="${fieldName}+'-delete-btn'" th:disabled="not ${logoSet}" role="button" class="btn btn-default fs-delete-identifier"
+          th:title="#{title.generic.delete(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}" th:href="@{{context}/details/fragment/logoDeletionDialog/{fieldName}(context=${context}, fieldName=${fieldName})}">
+            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+          </a><span class="btn btn-primary btn-file"> <span class="fa fa-upload" aria-hidden="true">&nbsp;&nbsp;</span> <span th:if="not ${logoSet}" th:text="#{file.upload.chooseLogo}"></span> <span th:if="${logoSet}" th:text="#{file.upload.chooseNewLogo}"></span>
+            <input th:id="${fieldName}" class="fs-logo-input-identifier" th:field="*{__${fieldName}__}" type="file" th:accept="${fileTypes}" th:attr="aria-describedby=${fieldName}+'Help'" />
+          </span>
+        </div>
+        <label th:id="${fieldName}+'-label'" th:for="${fieldName}">
+        </label>
+        <p th:id="${fieldName}+'Help'" class="help-block" th:text="#{'file.upload.'+${fieldName}+'.help'}">
+          HELPTEXT
+        </p>
+        <img th:if="${logoSet}" class="fs-preview" th:alt="#{${fieldMessagesPrefix ?: ''}+${fieldName}}" th:src="@{{context}/logos/{fieldName}(context=${context}, fieldName=${fieldName})}" />
+      </div>
+      <!--/*/ </th:block> /*/-->
+    </div>
+
+    <!-- display component for the userGroupList lists
+      Parameters:
+        linksAllowed (boolean, mandatory): decides if the table content is shown as link or span. requires pre-evaluated security expression
+        organizationId (String, mandatory): sets the organizationId to link to
+        userGroupName (String, mandatory): sets the user group to link to. If this is not present, it will only link to organization.
+        identifier (String, mandatory): sets the identifier to display
+    -->
+    <th:block th:fragment="userGroupTableLink" th:switch="${linksAllowed}">
+      <a th:case="true" class="fs-cell-link"
+        th:href="@{/organizations/{organizationId}/userGroups/{userGroupName}/users(organizationId=${organizationId}, userGroupName=${userGroupName})}"
+        th:text="${identifier}">IDENTIFIER</a>
+      <span th:case="false" class="fs-cell-link" th:text="${identifier}">IDENTIFIER</span>
+    </th:block>
+
+    <!-- Pagination navigation bar -->
+    <nav th:fragment="pagination" class="btn-group" role="group">
+      <button name="page" value="1" class="btn btn-default" th:disabled="${pageParams.page eq 1}">&laquo;</button>
+      <button name="page" th:value="${pageParams.page - 1}" class="btn btn-default" th:disabled="${pageParams.page eq 1}">&lsaquo;</button>
+      <button name="page" th:value="${pageParams.firstNavigationPage - 1}" class="btn btn-default" th:unless="${pageParams.firstNavigationPage eq 1}">&ctdot;</button>
+
+      <button name="page" th:value="${page}" th:text="${page}" th:each="page : ${#numbers.sequence(pageParams.firstNavigationPage, pageParams.lastNavigationPage)}" class="btn"
+        th:classappend="${pageParams.page eq page} ? btn-primary : btn-default" />
+
+      <button name="page" th:value="${pageParams.lastNavigationPage + 1}" class="btn btn-default" th:unless="${pageParams.lastNavigationPage eq pageParams.totalPages}">&ctdot;</button>
+      <button name="page" th:value="${pageParams.page + 1}" class="btn btn-default" th:disabled="${pageParams.page eq pageParams.totalPages}">&rsaquo;</button>
+      <button name="page" th:value="${pageParams.totalPages}" class="btn btn-default" th:disabled="${pageParams.page eq pageParams.totalPages}">&raquo;</button>
+    </nav>
+
+    <!-- display component for Form Views (Pdf and AssistantView)
+      Note: needs viewButtons.js as script and addViewButtonEvents() in init-script of the displaying page to work correctly
+      Parameters:
+        items (List<BaseView>): the List of items to iterate
+        maxSize (int): the maximum number of buttons to display next to each other (if more buttons are present, the last button will be changed to a dropdown)
+        msgKey (String): the message key for displaying the items (note: takes messageKey.none as empty message)-->
+    <div th:fragment="formItems" class="list-group" th:switch="${#lists.isEmpty(items)}">
+      <div class="list-group-item active" th:text="#{${msgKey}}">ITEMS</div>
+      <div th:case="true" class="list-group-item" th:text="#{|${msgKey}.none|}">NO ITEMS</div>
+      <!--/*/ <th:block th:case="false"> /*/-->
+      <div th:each="item : ${items}" class="list-group-item clearfix">
+        <span class="pull-right">
+          <div th:replace="components :: buttonGroup(btnGroupSize='btn-group-sm', item=${item}, maxSize=${maxSize})">BUTTONS</div>
+        </span>
+        <span th:text="${item.identifier + ' - ' + item.name}">IDENTIFIER</span>
+      </div>
+      <!--/*/ </th:block> /*/-->
+    </div>
+
+    <!-- display component for viewButtons
+      Note: Needs viewButtons.js and addViewButtonEvents() to function
+      Parameters:
+      btnGroupSize (cas class): optional parameter, if not set, btn-group-md is assumed
+      item (BaseView): required Parameter: the view to be evaluated
+      maxSize (int): the maximum number of buttons do be displayed next to each other
+      -->
+    <div th:fragment="buttonGroup" class="btn-group" th:classappend="${btnGroupSize ?: 'btn-group-md'}">
+      <!--/*/ <th:block th:with="buttons = ${item.viewButtons}, dropDowns = ${buttons.getDropdown(maxSize)}"> /*/-->
+      <a th:each="button: ${buttons.getPrimary(maxSize)}" th:href="@{${button.link}}" th:class="${button.cssClass}" th:classappend="'btn btn-default'" data:viewid="${button.data}" role="button" th:title="#{${button.l10nKey}}" th:target="${button.target}">
+        <span th:class="${button.glyphiconClass}"></span>
+      </a>
+      <!--/*/<th:block th:if="${not #lists.isEmpty(dropDowns)}">/*/-->
+      <div class="btn-group" th:classappend="${btnGroupSize ?: 'btn-group-md'}">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret fs-dropdown-caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li th:each="button: ${dropDowns}">
+            <a th:href="@{${button.link}}" th:class="${button.cssClass}" th:classappend="'text-left'" data:viewid="${button.data}" role="button" th:target="${button.target}">
+              <span th:class="${button.glyphiconClass}"></span>
+              <span th:text="#{${button.l10nKey}}"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!--/*/</th:block>/*/-->
+      <!--/*/</th:block>/*/-->
+    </div>
+
+    <!-- Add Navigation-Pill with link, icon, label and list of templates to mark it as active
+      Parameters:
+        target (String mandatory): Redirection Link eg: '/serverAdministration'
+        label (String mandatory): Thymeleaf Button Text Propertykey
+        icon (String mandatory): icon from fontawesome eg: 'fa-tachometer'
+        templateName (List<String> mandatory): Condition to make button active eg: templateName='{\'serveradministration/serverAdministration\'}'
+    -->
+    <li th:fragment="navPill" role="presentation" th:class="${#lists.contains(__${templateName}__, execInfo.templateName)} ? 'active'">
+      <a role="menuitem" class="text-center" th:href="@{__${target}__}">
+        <span class="fa fs-nav-icon" th:classappend="${icon}" aria-hidden="true"/>
+        <span class="fs-block" th:text="${label}">NAVPILL LABEL</span>
+      </a>
+    </li>
+
+    <!-- Integrates a full-line input-field for uploading files with button-group for upload and deleting
+      Parameters:
+        fieldName (String mandatory)
+        buttonLabelKey (String) Label on upload-button | Default: #'button.ok'
+        fileTypes (String) what kind of files are allowed (MIME Type) | Default: 'text/plain'
+        fieldIsMandatory(Boolean) | Default: false
+        fieldDescription (String) Tooltip text
+        fieldMessagesPrefix (String)
+        fileIsPresent(Boolean) expression for infotext
+        fieldRemark(String) infotext (key)
+        linkPrefix(String)
+    -->
+    <div th:fragment="fileUploadLine" class="form-group" th:classappend="${fieldHasErrors} ? has-error" th:with="fieldHasErrors=${#fields.hasErrors(fieldName)}">
+      <label th:for="${fieldName}" class="control-label" th:switch="${fieldIsMandatory ?: false}" >
+        <span th:case="true" th:text="#{label.generic.input.mandatory(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL*:</span>
+        <span th:case="false" th:text="#{label.generic.input(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}">LABEL:</span>
+        <span th:if="${fieldHasErrors}" th:errors="*{__${fieldName}__}">ERRORS</span>
+      </label>
+      <div th:if="${fileIsPresent}">
+        <span th:text="#{${fieldRemark}}"/>
+      </div>
+      <div class="input-group">
+        <span class="form-control fs-no-padding">
+          <div class="btn-group" role="group">
+            <a th:disabled="not ${fileIsPresent}" th:id="${fieldName}+'-delete-btn'" th:title="#{title.generic.delete(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}"
+              th:href="@{__${linkPrefix+'/' ?: ''}__fragment/deletionDialog/{fieldName}(fieldName=${fieldName})}" role="button"
+              class="btn btn-default fs-delete-identifier fs-no-border" shape="rect">
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"/>
+            </a>
+            <span class="btn btn-primary btn-file fs-no-border">
+              <span class="fa fa-upload" aria-hidden="true"/>
+              <span th:text="#{${buttonLabelKey} ?: 'button.ok'}">BUTTON TEXT</span>
+              <input class="fs-logo-input-identifier" type="file"
+                th:id="${fieldName}" th:accept="${fileTypes} ?: 'text/plain'" th:field="*{__${fieldName}__}"/>
+            </span>
+          </div>
+        </span>
+        <div class="input-group-btn">
+          <button class="btn btn-default fs-float-right" type="button" data-toggle="popover" data-placement="top" data-trigger="focus"
+            th:attr="data-content=${fieldDescription}" tabindex="-1">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"/>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- A date input field with label above.
+      Parameters:
+        fieldName (String mandatory)
+        fieldIsMandatory (Boolean)
+        dateValue (Date)
+        fieldMessagesPrefix (String)
+        datepickerClass (String)
+    -->
+    <div th:fragment="dateLabel" class="form-group form-group-sm">
+      <label th:if="${fieldIsMandatory}" class="control-label fs-left-control-label" for="${fieldName}_Label" th:text="#{label.generic.input.mandatory(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}"/>
+      <label th:unless="${fieldIsMandatory}" class="control-label fs-left-control-label" for="${fieldName}_Label" th:text="#{label.generic.input(#{${fieldMessagesPrefix ?: ''}+${fieldName}})}"/>
+      <input type="text" class="form-control fs-text-input-size" th:classappend="${datepickerClass}" required="${fieldIsMandatory}" th:field="*{__${fieldName}__}"/>
+    </div>
+  </body>
+</html>

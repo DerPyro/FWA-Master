@@ -1,0 +1,37 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/html"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.springframework.org/security/tags"
+layout:decorator="layout.html">
+	<head>
+		<meta charset="UTF-8"/>
+		<link rel="stylesheet" href="css/main.css">
+		<link rel="stylesheet" href="static/css/main.css">
+		<link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+		<link rel="stylesheet" th:href="@{/css/style.css}"/>
+		<title>FWA - Neuer Benutzer</title>
+	</head>
+	<body>
+		<div class="bgSettings">
+			<div class="row">
+				<form th:action="@{/addUser}" th:object="${userForm}" method="POST" class="col-6 offset-3" style="margin-top: 20em;">
+					<div class="form-group">
+						<input type="text" th:placeholder="User" th:field="*{userName}" class="form-control"/>
+						<br/>
+						<input type="password" th:placeholder="Passwort" th:field="*{userPassword}" class="form-control"/>
+					</div>
+					<br/>
+					<button type="submit" class="btn btn-block btn-danger">
+						<i class="fab fa-gripfire"></i> Hinzufügen <i class="fab fa-gripfire"></i>
+					</button>
+				</form>
+			</div>
+		</div>
+	<br/>
+		<div th:if="${errorMessage}" th:utext="${errorMessage}" class="errorMessage">
+			...
+		</div>
+	</body>
+</html>

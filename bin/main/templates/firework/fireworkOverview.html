@@ -1,0 +1,86 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/html"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.springframework.org/security/tags"
+layout:decorator="layout.html">
+	<head>
+		<title>FWA - Feuerwerksübersicht</title>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+		<link rel="stylesheet" th:href="@{/css/style.css}"/>
+		<link rel="stylesheet" th:href="@{/css/main.css}"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div th:replace="fragments/header :: header">&nbsp;</div>
+		<div class="container">
+ 			<th:block th:if="${message != null}">
+				<div th:replace="../fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+			</th:block>
+		</div>
+		<div class="container text-center">
+			<h2>Feuerwerksübersicht</h2>
+
+			<div class="green_border">
+				<div class="green_border">
+					<form th:object="${newFirework}" th:method="post">
+						<div th:replace="fragments/fwa_components :: textinput(fieldName='Name', path='fireworkName', componentPlaceholder='FireworkName')"></div>
+						<button draggable="false"
+							th:title="'Save new Firework'" type="submit"
+							class="btn btn-default btn-sm">
+								<span class="fas fa-save"></span>
+						</button>
+					</form>
+				</div>
+			</div>
+
+			<div class="row">
+				<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th></th>
+						<th>Anzahl Kanäle</th>
+						<th>Songs</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="firework : ${fireworks}">
+						<td><span th:text="${firework.id}">ID</span></td>
+						<td><span th:text="${firework.fireworkName}">Name</span></td>
+						<td style="text-align:center;">
+							 <span th:classappend="${firework.completed ? 'fab fa-hotjar text-success' : 'fas fa-spinner text-danger'}" />
+						</td>
+						<td><span th:text="${firework.pins}">Kanäle</span></td>
+						<td><span th:text="${firework.songs}">Songs</span></td>
+						<td style="text-align:center;">
+							<a role="button" draggable="false"
+								th:title="'Edit Firework'"
+								class="btn btn-default btn-sm"
+								th:href="@{firework/__${firework.id}__}">
+								<span class="fas fa-pencil-alt"></span>
+							</a>
+						</td>
+						<td style="text-align:center;">
+							<a role="button" draggable="false"
+								th:title="'Delete Firework'"
+								class="btn btn-default btn-sm"
+								th:href="@{delete/__${firework.id}__}">
+								<span class="fas fa-trash"></span>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div th:if="${errorMessage}" th:utext="${errorMessage}" class="errorMessage">
+			...
+		</div>
+	</body>
+</html>

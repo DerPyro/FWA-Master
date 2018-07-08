@@ -1,0 +1,54 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/html"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.springframework.org/security/tags"
+layout:decorator="layout.html">
+	<head>
+		<title>FWA - Neues Feuerwerk</title>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+		<link rel="stylesheet" th:href="@{/css/style.css}"/>
+		<link rel="stylesheet" th:href="@{/css/main.css}"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div th:replace="fragments/header :: header">&nbsp;</div>
+		<div class="container">
+ 			<th:block th:if="${message != null}">
+				<div th:replace="../fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+			</th:block>
+		</div>
+		<div class="container text-center">
+			<h2>Neues Feuerwerk</h2>
+			<div class="row">
+				<div class="col-sm-4">
+					<form>
+						GPIO Pin:</br>
+						<input type="text" name="gpio"></br>
+						Sekunde:</br>
+						<input type="xt" name="sec"></br>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<div th:replace="fragments/header :: header">&nbsp;</div>
+		<div class="container">
+    <!-- /* Handle the flash message */-->
+ 			<th:block th:if="${message != null}">
+        <!-- /* The message code is returned from the @Controller */ -->
+				<div th:replace="../fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+			</th:block>
+		</div>
+		<div th:replace="fragments/fwa_components :: textinput(fieldName='Test', componentPlaceholder='Hallo', fieldText='wuubwuub')"></div>
+		<div th:replace="fragments/components :: text-input-vertical(fieldName='gpioPin', fieldDescription=#{serveradministration.apikey.id.tooltip},
+					fieldMessagesPrefix=${prefix}, componentIsReadonly=true)"/>
+		
+		<div th:if="${errorMessage}" th:utext="${errorMessage}" class="errorMessage">
+			...
+		</div>
+	</body>
+</html>

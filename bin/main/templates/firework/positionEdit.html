@@ -1,0 +1,75 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/html"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.springframework.org/security/tags"
+layout:decorator="layout.html">
+	<head>
+		<title>FWA - Positionen verwalten</title>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+		<link rel="stylesheet" th:href="@{/css/style.css}"/>
+		<link rel="stylesheet" th:href="@{/css/main.css}"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div th:replace="fragments/header :: header">&nbsp;</div>
+		<div class="container">
+ 			<th:block th:if="${message != null}">
+				<div th:replace="../fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+			</th:block>
+		</div>
+		<div class="container text-center">
+			<div class="row">
+				<div class="green_border">
+					<form th:object="${newPosition}" th:method="post" th:action="''">
+					<table>
+						<tbody>
+							<tr>
+								<td><span>Neu:</span></td>
+								<td><div th:replace="fragments/fwa_components :: textinput(fieldName='Name', path='name', componentPlaceholder='PositionName')"></div></td>
+								<td style="text-align:center;">
+									<button draggable="false"
+										th:title="'Save new Position'" type="submit"
+										class="btn btn-default btn-sm">
+											<span class="fas fa-save"></span>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					</form>
+				</div>
+
+				<div class="row">
+				</div>
+				<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="position : ${positions}">
+						<td><span th:text="${position.name}">Name</span></td>
+						<td style="text-align:center;">
+							<a role="button" draggable="false"
+								th:title="'Delete Position'"
+								class="btn btn-default btn-sm"
+								th:href="@{positions/__${position.name}__/delete/}">
+								<span class="fas fa-trash"></span>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div th:if="${errorMessage}" th:utext="${errorMessage}" class="errorMessage">
+			...
+		</div>
+	</body>
+</html>

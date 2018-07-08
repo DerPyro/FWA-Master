@@ -1,0 +1,55 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/html"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.springframework.org/security/tags"
+layout:decorator="/layout.html">
+    <head>
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+        <meta charset="UTF-8" />
+        <title>Welcome</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+   </head>
+   <body>
+      <h1>Welcome</h1>
+      <h2 th:utext="${message}">..!..</h2>
+       
+      <!--  
+       
+         In Thymeleaf the equivalent of
+         JSP's ${pageContext.request.contextPath}/edit.html
+         would be @{/edit.html}
+          
+         -->
+          
+      <a th:href="@{/userList}">User List</a>  
+       
+   </body>
+    
+</html>
+<!-- 
+
+<html>
+<head>
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+	<title>FWA Wolfs</title>
+</head>
+<body>
+	<div class="bg">
+		<div class="row">
+			<form action="home" method="get" class="col-6 offset-3" style="margin-top: 20em;" >
+				<div class="form-group">
+				  <input id="pwd" name="pwd" type="password" class="form-control"  placeholder="Feuerweksanlage Wolfs">
+				</div>
+				<button type="submit"  class="btn btn-block btn-danger">
+						<i class="fab fa-gripfire"></i> Fire them all <i class="fab fa-gripfire"></i>
+				</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>  -->

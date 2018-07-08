@@ -1,0 +1,54 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/html"
+xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.springframework.org/security/tags"
+layout:decorator="layout.html">
+	<head>
+		<title>FWA - Login</title>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+		<link rel="stylesheet" th:href="@{/css/style.css}"/>
+		<link rel="stylesheet" th:href="@{/css/main.css}"/>
+		<link rel="stylesheet" th:href="@{/css/core.css}"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div th:replace="fragments/header :: header">&nbsp;</div>
+		<div class="container">
+    <!-- /* Handle the flash message */-->
+ 			<th:block th:if="${message != null}">
+        <!-- /* The message code is returned from the @Controller */ -->
+				<div th:replace="../fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+			</th:block>
+		</div>
+	
+		<!-- <nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="fas fa-bars" style="color: white"></span>
+					</button>
+					<a class="navbar-brand" href="#"><img src="images/FWA_logo.png" style="height: 70px;"></a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active"><a href="#">Home</a></li>
+						<li><a href="/FWA/firework">Feuerwerk</a>
+						<li><a href="/FWA/settings">Einstellungen</a>
+					</ul>
+				</div>
+			</div>
+		</nav> -->
+		
+		<div class="container text-center">
+			<h2>Login</h2>
+		</div>
+		
+		<div th:if="${errorMessage}" th:utext="${errorMessage}" class="errorMessage">
+			...
+		</div>
+	</body>
+</html>

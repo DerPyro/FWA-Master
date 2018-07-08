@@ -1,0 +1,35 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/html"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	layout:decorator="/layout.html">
+<head>
+	<meta charset="UTF-8" />
+	<title>User List</title>
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="static/css/main.css">
+	<link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
+	<link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+	<div class="bgSettings bgOverview">
+	<h1>User List</h1>
+	<a href="addUser">Add User</a>
+	<br />
+	<br />
+	<div>
+		<table border="1">
+			<tr>
+				<th>Username</th>
+				<th>Password</th>
+			</tr>
+			<tr th:each="user : ${users}">
+				<td th:utext="${user.userName}">...</td>
+				<td th:utext="${user.userPassword}">...</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
